@@ -52,7 +52,7 @@ public class FilterQuery {
         this.model = model;
     }
 
-    public void setClassFilter(String vclass) {
+    public void setVClassFilter(String vclass) {
         this.vclass = vclass;
     }
 }
