@@ -65,7 +65,9 @@ public class R2D2Service implements VehicleService {
 
     /*
      * Get(int Id):
-     * return a single Vehicle object with a given Id
+     * return a single Vehicle object with a given Id.
+     * Client is supposed to pass in a valid vehicle id; 
+     * Otherwise an exception will be thrown
      */
     public Vehicle Get(int Id) throws VehicleNotFoundException{
         if(idToVehicleMap.containsKey(Id)) {
@@ -101,7 +103,7 @@ public class R2D2Service implements VehicleService {
      */
     public void Update(Vehicle vehicle){
         if(!isInMemoryStore(vehicle)) {
-            System.err.println("Failed to update");
+            System.err.println("Failed to update: vehicle does not exist");
             return;
         }
 
@@ -125,7 +127,7 @@ public class R2D2Service implements VehicleService {
      */
     public void Delete(Vehicle vehicle){
         if(!isInMemoryStore(vehicle)) {
-            System.err.println("Failed to delete");
+            System.err.println("Failed to delete: vehicle does not exist");
             return;
         }
 
@@ -160,7 +162,6 @@ public class R2D2Service implements VehicleService {
             return true;
         }
         catch (VehicleNotFoundException e) {
-            e.printStackTrace();
             return false;
         }
     }

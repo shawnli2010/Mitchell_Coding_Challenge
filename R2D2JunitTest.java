@@ -80,6 +80,7 @@ public class R2D2JunitTest{
         System.out.println("Testing Update: ");
 
         Vehicle v1 = new Vehicle(1960, "T-65B", "X-wing", "Starfighter");
+        service.Delete(v1);
         service.Create(v1);
 
         int v1_id         = v1.getId();
@@ -88,6 +89,7 @@ public class R2D2JunitTest{
         String new_model  = "T-95C";
         String new_make   = "W-wing";
 
+        // Create the new object that will be used to replace the old one
         Vehicle new_v1 = new Vehicle(old_year, new_model, new_make, old_vclass);
         new_v1.setId(v1_id);
 
