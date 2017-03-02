@@ -5,19 +5,27 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 public class R2D2JunitTest{
     
     private R2D2Service service;
+    private ByteArrayOutputStream outContent;
 
     @Before
     public void setUp() {
         this.service = new R2D2Service();
+
+        //redirect the System-output (normaly the console) to a variable
+        outContent = new ByteArrayOutputStream();
+        System.setErr(new PrintStream(outContent));
     }
 
     @After
     public void tearDown() {
         service = null;
+        outContent = null;
     }
 
     @Test
@@ -76,6 +84,26 @@ public class R2D2JunitTest{
     }
 
     @Test
+    public void testInvalidDelete() {
+        System.out.println("Testing Invalid Delete: ");
+
+
+
+        List<Vehicle> expect = new ArrayList<Vehicle>();
+        List<Vehicle> actual;
+
+        Vehicle v1 = new Vehicle(1960, "T-65B", "X-wing", "Starfighter");
+        Vehicle v2 = new Vehicle(1965, "T-65C-A2", "X-wing", "Starfighter");
+
+        service.Create(v1);
+        service.Create(v2);
+        service.Delete(v2);
+        service.Delete(v2);
+
+        assertEquals("Failed to delete: vehicle does not exist\n", outContent.toString());
+    }
+
+    @Test
     public void testUpdate() {    
         System.out.println("Testing Update: ");
 
@@ -101,6 +129,23 @@ public class R2D2JunitTest{
 
         assertEquals(result_model, new_model);
         assertEquals(result_make, new_make);
+    }
+
+    @Test
+    public void testInvalidUpdate() {
+        System.out.println("Testing Invalid Update: ");
+
+        List<Vehicle> expect = new ArrayList<Vehicle>();
+        List<Vehicle> actual;
+
+        Vehicle v1 = new Vehicle(1960, "T-65B", "X-wing", "Starfighter");
+        Vehicle v2 = new Vehicle(1965, "T-65C-A2", "X-wing", "Starfighter");
+
+        service.Create(v1);
+        // Trying to update a vehicle that have not been created
+        service.Update(v2);
+
+        assertEquals("Failed to update: vehicle does not exist\n", outContent.toString());
     }
 
     @Test
@@ -172,7 +217,5 @@ public class R2D2JunitTest{
             assertEquals(v.getModel(), modelFilter);
             assertEquals(v.getVClass(), vclassFilter);
         }
-
     }    
-
 }
